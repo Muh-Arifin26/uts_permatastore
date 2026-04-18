@@ -4,7 +4,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'register_page.dart';
 
-// 🔥 WARNA PERMATA
+// 🔥 WARNA
 const primaryColor = Color(0xFF0F9D58);
 const secondaryColor = Color(0xFF34A853);
 const accentColor = Color(0xFF0B8043);
@@ -15,12 +15,39 @@ class LoginPage extends StatefulWidget {
   State<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageState extends State<LoginPage>
+    with SingleTickerProviderStateMixin {
+
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
   bool isLoading = false;
   bool isObscure = true;
+
+  late AnimationController _controller;
+  late Animation<double> _scaleAnim;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 800),
+    );
+
+    _scaleAnim = Tween<double>(begin: 0.8, end: 1.0).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeOutBack),
+    );
+
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   Future<void> login() async {
     if (emailController.text.isEmpty || passwordController.text.isEmpty) {
@@ -85,223 +112,194 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: true,
-      body: SafeArea(
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            return SingleChildScrollView(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  minHeight: constraints.maxHeight,
-                ),
-                child: IntrinsicHeight(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [primaryColor, secondaryColor, accentColor],
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
+      body: Container(
+        width: double.infinity,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [primaryColor, secondaryColor, accentColor],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: SafeArea(
+          child: Column(
+            children: [
+
+              SizedBox(height: 30),
+
+              // 🔥 LOGO + ANIMASI
+              ScaleTransition(
+                scale: _scaleAnim,
+                child: Column(
+                  children: [
+                    Container(
+                      width: 120,
+                      height: 120,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: LinearGradient(
+                          colors: [goldColor, Colors.white],
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: goldColor.withOpacity(0.7),
+                            blurRadius: 20,
+                          )
+                        ],
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.all(8),
+                        child: ClipOval(
+                          child: Image.asset(
+                            "assets/image/logo.jpg",
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                       ),
                     ),
-                    child: Column(
-                      children: [
-                        SizedBox(height: 40),
 
-                        // 🔥 LOGO
-                        Column(
-                          children: [
-                            Container(
-                              width: 90,
-                              height: 90,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                shape: BoxShape.circle,
-                              ),
-                              child: Padding(
-                                padding: EdgeInsets.all(10),
-                                child: Image.asset(
-                                    "assets/image/logo.jpg"),
-                              ),
+                    SizedBox(height: 15),
+
+                    Text(
+                      "Permata Store",
+                      style: TextStyle(
+                        fontSize: 26,
+                        fontWeight: FontWeight.bold,
+                        color: goldColor,
+                      ),
+                    ),
+
+                    SizedBox(height: 5),
+
+                    Text(
+                      "Perabotan Rumah Tangga Store",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 13,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              SizedBox(height: 30),
+
+              // 🔥 CARD LOGIN
+              Expanded(
+                child: Container(
+                  padding: EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(30),
+                    ),
+                  ),
+                  child: Column(
+                    children: [
+
+                      Text(
+                        "Login",
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+
+                      SizedBox(height: 25),
+
+                      TextField(
+                        controller: emailController,
+                        decoration: InputDecoration(
+                          hintText: "Email",
+                          prefixIcon: Icon(Icons.email),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                        ),
+                      ),
+
+                      SizedBox(height: 15),
+
+                      TextField(
+                        controller: passwordController,
+                        obscureText: isObscure,
+                        decoration: InputDecoration(
+                          hintText: "Password",
+                          prefixIcon: Icon(Icons.lock),
+                          suffixIcon: IconButton(
+                            icon: Icon(isObscure
+                                ? Icons.visibility_off
+                                : Icons.visibility),
+                            onPressed: () {
+                              setState(() {
+                                isObscure = !isObscure;
+                              });
+                            },
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                        ),
+                      ),
+
+                      SizedBox(height: 25),
+
+                      // 🔥 BUTTON LOGIN
+                      SizedBox(
+                        width: double.infinity,
+                        height: 50,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: primaryColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
                             ),
-                            SizedBox(height: 10),
-                            Text(
-                              "Permata Store",
+                          ),
+                          onPressed: isLoading ? null : login,
+                          child: isLoading
+                              ? CircularProgressIndicator(color: Colors.white)
+                              : Text("Login"),
+                        ),
+                      ),
+
+                      SizedBox(height: 15),
+
+                      OutlinedButton.icon(
+                        onPressed: loginWithGoogle,
+                        icon: Icon(Icons.g_mobiledata),
+                        label: Text("Login dengan Google"),
+                      ),
+
+                      SizedBox(height: 20),
+
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text("Belum punya akun? "),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => RegisterPage()),
+                              );
+                            },
+                            child: Text(
+                              "Daftar sekarang",
                               style: TextStyle(
-                                color: goldColor,
-                                fontSize: 24,
+                                color: primaryColor,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                          ],
-                        ),
-
-                        SizedBox(height: 30),
-
-                        // 🔥 CARD
-                        Expanded(
-                          child: Container(
-                            width: double.infinity,
-                            padding: EdgeInsets.all(20),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.vertical(
-                                top: Radius.circular(30),
-                              ),
-                            ),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  "Login",
-                                  style: TextStyle(
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black, // 🔥 hitam
-                                  ),
-                                ),
-
-                                SizedBox(height: 25),
-
-                                // 🔥 EMAIL
-                                TextField(
-                                  controller: emailController,
-                                  style: TextStyle(color: Colors.black),
-                                  decoration: InputDecoration(
-                                    labelText: "Email",
-                                    labelStyle:
-                                    TextStyle(color: Colors.black),
-                                    prefixIcon: Icon(Icons.email,
-                                        color: primaryColor),
-                                    border: OutlineInputBorder(
-                                      borderRadius:
-                                      BorderRadius.circular(15),
-                                    ),
-                                  ),
-                                ),
-
-                                SizedBox(height: 15),
-
-                                // 🔥 PASSWORD
-                                TextField(
-                                  controller: passwordController,
-                                  obscureText: isObscure,
-                                  style: TextStyle(color: Colors.black),
-                                  decoration: InputDecoration(
-                                    labelText: "Password",
-                                    labelStyle:
-                                    TextStyle(color: Colors.black),
-                                    prefixIcon: Icon(Icons.lock,
-                                        color: primaryColor),
-                                    suffixIcon: IconButton(
-                                      icon: Icon(isObscure
-                                          ? Icons.visibility_off
-                                          : Icons.visibility),
-                                      onPressed: () {
-                                        setState(() {
-                                          isObscure = !isObscure;
-                                        });
-                                      },
-                                    ),
-                                    border: OutlineInputBorder(
-                                      borderRadius:
-                                      BorderRadius.circular(15),
-                                    ),
-                                  ),
-                                ),
-
-                                SizedBox(height: 25),
-
-                                // 🔥 BUTTON LOGIN
-                                SizedBox(
-                                  width: double.infinity,
-                                  height: 50,
-                                  child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: primaryColor,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                        BorderRadius.circular(15),
-                                      ),
-                                    ),
-                                    onPressed:
-                                    isLoading ? null : login,
-                                    child: isLoading
-                                        ? CircularProgressIndicator(
-                                        color: Colors.white)
-                                        : Text(
-                                      "Login",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight:
-                                        FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-
-                                SizedBox(height: 15),
-
-                                // 🔥 GOOGLE
-                                SizedBox(
-                                  width: double.infinity,
-                                  height: 50,
-                                  child: OutlinedButton.icon(
-                                    onPressed: isLoading
-                                        ? null
-                                        : loginWithGoogle,
-                                    icon: Icon(Icons.g_mobiledata,
-                                        color: primaryColor),
-                                    label: Text(
-                                      "Login dengan Google",
-                                      style:
-                                      TextStyle(color: Colors.black),
-                                    ),
-                                  ),
-                                ),
-
-                                SizedBox(height: 20),
-
-                                Row(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      "Belum punya akun? ",
-                                      style:
-                                      TextStyle(color: Colors.black),
-                                    ),
-                                    GestureDetector(
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (_) =>
-                                                  RegisterPage()),
-                                        );
-                                      },
-                                      child: Text(
-                                        "Daftar",
-                                        style: TextStyle(
-                                          color: primaryColor,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-
-                                SizedBox(height: 20),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                          )
+                        ],
+                      )
+                    ],
                   ),
                 ),
-              ),
-            );
-          },
+              )
+            ],
+          ),
         ),
       ),
     );
