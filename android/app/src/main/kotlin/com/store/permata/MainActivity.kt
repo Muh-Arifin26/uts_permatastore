@@ -1,4 +1,4 @@
-package com.example.storepermata
+package com.store.permata
 
 import io.flutter.embedding.android.FlutterActivity
 

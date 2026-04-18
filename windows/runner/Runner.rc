@@ -89,13 +89,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "storepermata" "\0"
+            VALUE "CompanyName", "com.store" "\0"
+            VALUE "FileDescription", "permata" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "storepermata" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2026 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "storepermata.exe" "\0"
-            VALUE "ProductName", "storepermata" "\0"
+            VALUE "InternalName", "permata" "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2026 com.store. All rights reserved." "\0"
+            VALUE "OriginalFilename", "permata.exe" "\0"
+            VALUE "ProductName", "permata" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

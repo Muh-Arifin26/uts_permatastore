@@ -122,9 +122,9 @@ List<Product> productList = [
   Product(
     name: "Serbet Lap Serbaguna",
     image: [
-      "assets/image/s1.jpg",
-      "assets/image/s2.jpg",
-      "assets/image/s3.jpg",
+      "assets/image/l1.jpg",
+      "assets/image/l2.jpg",
+      "assets/image/l3.jpg",
     ],
     price: 8000,
     rating: 4.5,
