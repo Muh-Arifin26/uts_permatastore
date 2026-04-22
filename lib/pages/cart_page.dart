@@ -1,9 +1,64 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../models/cart_model.dart';
+import 'success_page.dart';
 
 class CartPage extends StatelessWidget {
   const CartPage({super.key});
+
+  // 🔥 CHECKOUT FUNCTION
+  Future<void> checkout(BuildContext context) async {
+    final cart = Provider.of<CartModel>(context, listen: false);
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Silakan login dulu")),
+      );
+      return;
+    }
+
+    if (cart.items.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Keranjang kosong")),
+      );
+      return;
+    }
+
+    try {
+      await FirebaseFirestore.instance.collection('orders').add({
+        'user_id': user.uid,
+        'total': cart.totalPrice,
+        'items': cart.items.map((item) {
+          return {
+            'name': item.product.name,
+            'price': item.product.price,
+            'qty': item.quantity,
+            'image': item.product.image[0],
+          };
+        }).toList(),
+        'created_at': FieldValue.serverTimestamp(),
+      });
+
+      // 🔥 CLEAR CART
+      cart.clearCart();
+
+      // 🔥 LANGSUNG KE SUCCESS PAGE (TANPA POPUP)
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) => const SuccessPage(),
+        ),
+      );
+
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error: $e")),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +80,7 @@ class CartPage extends StatelessWidget {
             child: ListTile(
               contentPadding: const EdgeInsets.all(10),
 
-              // 🔥 FIX GAMBAR
+              // 🖼️ GAMBAR
               leading: ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: SizedBox(
@@ -47,7 +102,7 @@ class CartPage extends StatelessWidget {
               // 💰 HARGA
               subtitle: Text("Rp ${item.product.price}"),
 
-              // 🔢 QUANTITY
+              // 🔢 QTY
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -89,10 +144,13 @@ class CartPage extends StatelessWidget {
                   fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),
+
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  checkout(context);
+                },
                 child: const Text("Checkout"),
               ),
             ),

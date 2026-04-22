@@ -9,39 +9,50 @@ class CartItem {
 }
 
 class CartModel extends ChangeNotifier {
-  final List<CartItem> _items = [];
+  List<CartItem> items = [];
 
-  List<CartItem> get items => _items;
-
+  // ➕ Tambah ke cart
   void addToCart(Product product) {
     final index =
-    _items.indexWhere((item) => item.product.name == product.name);
+    items.indexWhere((item) => item.product.name == product.name);
 
     if (index != -1) {
-      _items[index].quantity++;
+      items[index].quantity++;
     } else {
-      _items.add(CartItem(product: product));
+      items.add(CartItem(product: product));
     }
 
     notifyListeners();
   }
 
+  // 🔼 Tambah qty
   void increaseQty(CartItem item) {
     item.quantity++;
     notifyListeners();
   }
 
+  // 🔽 Kurangi qty
   void decreaseQty(CartItem item) {
     if (item.quantity > 1) {
       item.quantity--;
     } else {
-      _items.remove(item);
+      items.remove(item);
     }
     notifyListeners();
   }
 
+  // 💰 Total harga
   int get totalPrice {
-    return _items.fold(
-        0, (sum, item) => sum + item.product.price * item.quantity);
+    int total = 0;
+    for (var item in items) {
+      total += item.product.price * item.quantity;
+    }
+    return total;
+  }
+
+  // 🔥 FIX UTAMA (INI YANG BIKIN ERROR HILANG)
+  void clearCart() {
+    items = [];
+    notifyListeners();
   }
 }
