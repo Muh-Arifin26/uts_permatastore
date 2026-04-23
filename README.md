@@ -1,16 +1,35 @@
-# storepermata
+# 🛒 Permata Store
+**Perabotan Rumah Tangga Store**
 
-A new Flutter project.
+Aplikasi e-commerce berbasis Flutter untuk penjualan perabotan rumah tangga seperti sapu, pel, wajan, dan kebutuhan rumah lainnya.
 
-## Getting Started
+---
 
-This project is a starting point for a Flutter application.
+## 🚀 Fitur Utama
+- 🔐 Login & Register (Firebase Auth)
+- 🛍️ Katalog produk
+- 🛒 Keranjang belanja (Cart)
+- 💳 Checkout (Firestore)
+- 🔥 Login dengan Google
+- 📦 Penyimpanan data menggunakan Firebase
 
-A few resources to get you started if this is your first Flutter project:
+---
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## 🧱 Teknologi
+- Flutter
+- Firebase Authentication
+- Cloud Firestore
+- Provider (State Management)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+---
+
+## 📸 Tampilan Aplikasi
+- Halaman Login & Register
+- Halaman Home (Produk)
+- Halaman Detail Produk
+- Halaman Cart
+- Halaman Checkout
+
+---
+
+## 📂 Struktur Project
