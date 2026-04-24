@@ -66,6 +66,15 @@ class _RegisterPageState extends State<RegisterPage>
       return;
     }
 
+    // 🔥 VALIDASI EMAIL
+    if (!RegExp(r'^[^@]+@[^@]+\.[^@]+')
+        .hasMatch(emailController.text.trim())) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Format email tidak valid")),
+      );
+      return;
+    }
+
     setState(() => isLoading = true);
 
     try {
@@ -77,10 +86,15 @@ class _RegisterPageState extends State<RegisterPage>
 
       final user = userCredential.user;
 
-      // 🔥 SIMPAN KE FIRESTORE (AMAN)
+      if (user == null) throw Exception("User null");
+
+      // 🔥 KIRIM EMAIL VERIFIKASI
+      await user.sendEmailVerification();
+
+      // 🔥 SIMPAN FIRESTORE
       await FirebaseFirestore.instance
           .collection('users')
-          .doc(user!.uid)
+          .doc(user.uid)
           .set({
         'name': nameController.text.trim(),
         'email': emailController.text.trim(),
@@ -88,16 +102,20 @@ class _RegisterPageState extends State<RegisterPage>
         'created_at': DateTime.now(),
       });
 
+      // 🔥 LOGOUT
       await FirebaseAuth.instance.signOut();
 
       if (!mounted) return;
       setState(() => isLoading = false);
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Akun berhasil dibuat")),
+        const SnackBar(
+          content: Text("Akun berhasil dibuat, cek email untuk verifikasi"),
+        ),
       );
 
       Navigator.pop(context);
+
     } catch (e) {
       setState(() => isLoading = false);
 

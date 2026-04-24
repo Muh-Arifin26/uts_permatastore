@@ -60,13 +60,27 @@ class _LoginPageState extends State<LoginPage>
     setState(() => isLoading = true);
 
     try {
+      final userCredential =
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
-    } catch (e) {
+
+      final user = userCredential.user;
+
+      // 🔥 CEK EMAIL VERIFIKASI
+      if (user != null && !user.emailVerified) {
+        await FirebaseAuth.instance.signOut();
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Email belum diverifikasi")),
+        );
+        return;
+      }
+
+    } on FirebaseAuthException catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Login gagal")),
+        SnackBar(content: Text("Login gagal: ${e.code}")),
       );
     }
 
