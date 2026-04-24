@@ -1,7 +1,7 @@
 # 🛒 Permata Store
-**Perabotan Rumah Tangga Store**
+**toko barang pecah belah berbahan keramik**
 
-Aplikasi e-commerce berbasis Flutter untuk penjualan perabotan rumah tangga seperti sapu, pel, wajan, dan kebutuhan rumah lainnya.
+Aplikasi e-commerce berbasis Flutter untuk penjualan barang pecah belah seperti Piring, Mangkok, Cangkir, Teko, Gelas.
 
 NAMA : MUHAMMAD ARIFIN
 
