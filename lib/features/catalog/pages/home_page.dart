@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import '../models/product.dart';
-import '../../../widgets/product_card.dart';
+import '../widgets/product_card.dart';
 import '../../cart/pages/cart_page.dart';
 import 'favorite_page.dart';
-import '../../../pages/profile_page.dart';
+import '../../profile/pages/profile_page.dart';
 import 'dart:async';
 
 class HomePage extends StatefulWidget {
@@ -67,21 +67,14 @@ class _HomeContentState extends State<HomeContent> {
 
       bool matchCategory = true;
 
-      if (selectedCategory == "Dapur") {
-        matchCategory = name.contains("wajan") ||
-            name.contains("talenan") ||
-            name.contains("pisau") ||
-            name.contains("mangkok") ||
-            name.contains("saringan");
-      } else if (selectedCategory == "Cleaning") {
-        matchCategory = name.contains("pel") ||
-            name.contains("sapu") ||
-            name.contains("pengki");
-      } else if (selectedCategory == "Storage") {
-        matchCategory = name.contains("rak");
-      } else if (selectedCategory == "Essentials") {
-        matchCategory = name.contains("gayung") ||
-            name.contains("serbet");
+      if (selectedCategory == "Cangkir") {
+        matchCategory = name.contains("cangkir") || name.contains("mug");
+      } else if (selectedCategory == "Piring") {
+        matchCategory = name.contains("piring");
+      } else if (selectedCategory == "Mangkok") {
+        matchCategory = name.contains("mangkok") || name.contains("bowl");
+      } else if (selectedCategory == "Set Keramik") {
+        matchCategory = name.contains("set");
       }
 
       final matchSearch = name.contains(keyword);
@@ -214,10 +207,10 @@ class _HomeContentState extends State<HomeContent> {
                 padding: EdgeInsets.symmetric(horizontal: 10),
                 children: [
                   buildCategory("Semua"),
-                  buildCategory("Dapur"),
-                  buildCategory("Cleaning"),
-                  buildCategory("Storage"),
-                  buildCategory("Essentials"),
+                  buildCategory("Cangkir"),
+                  buildCategory("Piring"),
+                  buildCategory("Mangkok"),
+                  buildCategory("Set Keramik"),
                 ],
               ),
             ),

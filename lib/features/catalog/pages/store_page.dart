@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/product.dart';
-import '../../../widgets/product_card.dart';
-import '../../../pages/chat_page.dart';
+import '../widgets/product_card.dart';
+import '../../profile/pages/chat_page.dart';
 
 class StorePage extends StatefulWidget {
   final String storeName;
@@ -22,27 +22,20 @@ class _StorePageState extends State<StorePage> {
 
       if (selectedCategory == "Semua") return true;
 
-      if (selectedCategory == "Dapur") {
-        return name.contains("wajan") ||
-            name.contains("talenan") ||
-            name.contains("pisau") ||
-            name.contains("mangkok") ||
-            name.contains("saringan");
+      if (selectedCategory == "Cangkir") {
+        return name.contains("cangkir") || name.contains("mug");
       }
 
-      if (selectedCategory == "Cleaning") {
-        return name.contains("pel") ||
-            name.contains("sapu") ||
-            name.contains("pengki");
+      if (selectedCategory == "Piring") {
+        return name.contains("piring");
       }
 
-      if (selectedCategory == "Storage") {
-        return name.contains("rak");
+      if (selectedCategory == "Mangkok") {
+        return name.contains("mangkok") || name.contains("bowl");
       }
 
-      if (selectedCategory == "Essentials") {
-        return name.contains("gayung") ||
-            name.contains("serbet");
+      if (selectedCategory == "Set Keramik") {
+        return name.contains("set");
       }
 
       return true;
@@ -137,10 +130,10 @@ class _StorePageState extends State<StorePage> {
               padding: EdgeInsets.symmetric(horizontal: 10),
               children: [
                 buildCategory("Semua"),
-                buildCategory("Dapur"),
-                buildCategory("Cleaning"),
-                buildCategory("Storage"),
-                buildCategory("Essentials"),
+                buildCategory("Cangkir"),
+                buildCategory("Piring"),
+                buildCategory("Mangkok"),
+                buildCategory("Set Keramik"),
               ],
             ),
           ),

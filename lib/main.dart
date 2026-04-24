@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+// 🔥 CORE
+import 'core/theme/theme_provider.dart';
+
+// 🔥 FEATURES
 import 'features/cart/models/cart_model.dart';
 import 'features/catalog/providers/favorite_model.dart';
-import 'core/theme/theme_provider.dart';
 import 'features/catalog/pages/home_page.dart';
-import 'features/auth/pages/login_page.dart';
 import 'features/cart/pages/cart_page.dart';
+import 'features/auth/pages/login_page.dart';
+
+// 🔥 FIREBASE
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -42,12 +48,10 @@ class MyApp extends StatelessWidget {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
 
-          // 🔥 DARK MODE
           themeMode: themeProvider.themeMode,
           theme: ThemeData.light(),
           darkTheme: ThemeData.dark(),
 
-          // 🔥 TIDAK PERLU initialRoute LAGI
           home: const AuthWrapper(),
 
           routes: {
@@ -60,9 +64,6 @@ class MyApp extends StatelessWidget {
   }
 }
 
-//
-// 🔥 AUTO LOGIN CHECK
-//
 class AuthWrapper extends StatelessWidget {
   const AuthWrapper({super.key});
 
@@ -72,19 +73,16 @@ class AuthWrapper extends StatelessWidget {
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
 
-        // ⏳ loading
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Scaffold(
             body: Center(child: CircularProgressIndicator()),
           );
         }
 
-        // ✅ kalau sudah login
         if (snapshot.hasData) {
           return HomePage();
         }
 
-        // ❌ kalau belum login
         return LoginPage();
       },
     );
