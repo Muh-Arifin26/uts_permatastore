@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'models/cart_model.dart';
-import 'models/favorite_model.dart';
-import 'models/theme_provider.dart';
-import 'pages/home_page.dart';
-import 'pages/login_page.dart';
-import 'pages/cart_page.dart';
+import 'features/cart/models/cart_model.dart';
+import 'features/catalog/providers/favorite_model.dart';
+import 'core/theme/theme_provider.dart';
+import 'features/catalog/pages/home_page.dart';
+import 'features/auth/pages/login_page.dart';
+import 'features/cart/pages/cart_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 

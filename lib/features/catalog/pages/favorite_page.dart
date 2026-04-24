@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../models/favorite_model.dart';
+import '../providers/favorite_model.dart';
 
 class FavoritePage extends StatelessWidget {
   @override

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/product.dart';
-import '../models/cart_model.dart';
-import '../pages/store_page.dart';
+import '../../cart/models/cart_model.dart';
+import 'store_page.dart';
 
 class DetailPage extends StatefulWidget {
   final Product product;

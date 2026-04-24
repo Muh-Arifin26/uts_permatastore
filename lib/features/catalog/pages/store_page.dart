@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/product.dart';
-import '../widgets/product_card.dart';
-import '../pages/chat_page.dart';
+import '../../../widgets/product_card.dart';
+import '../../../pages/chat_page.dart';
 
 class StorePage extends StatefulWidget {
   final String storeName;

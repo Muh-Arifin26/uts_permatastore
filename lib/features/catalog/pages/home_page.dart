@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import '../models/product.dart';
-import '../widgets/product_card.dart';
-import 'cart_page.dart';
+import '../../../widgets/product_card.dart';
+import '../../cart/pages/cart_page.dart';
 import 'favorite_page.dart';
-import 'profile_page.dart';
+import '../../../pages/profile_page.dart';
 import 'dart:async';
 
 class HomePage extends StatefulWidget {

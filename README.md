@@ -1,11 +1,11 @@
 # 🛒 Permata Store
 **Perabotan Rumah Tangga Store**
 
-NAMA : MUHAMMAD ARIFIN 
+Aplikasi e-commerce berbasis Flutter untuk penjualan perabotan rumah tangga seperti sapu, pel, wajan, dan kebutuhan rumah lainnya.
+
+NAMA : MUHAMMAD ARIFIN
 
 NIM : 1123150053
-
-Aplikasi e-commerce berbasis Flutter untuk penjualan perabotan rumah tangga seperti sapu, pel, wajan, dan kebutuhan rumah lainnya.
 
 ---
 
