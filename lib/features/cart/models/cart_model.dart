@@ -9,50 +9,56 @@ class CartItem {
 }
 
 class CartModel extends ChangeNotifier {
-  List<CartItem> items = [];
+  final List<CartItem> _items = [];
 
-  // ➕ Tambah ke cart
+  List<CartItem> get items => _items;
+
+  int get totalPrice {
+    return _items.fold(
+      0,
+          (sum, item) => sum + (item.product.price * item.quantity),
+    );
+  }
+
+  // 🔥 TAMBAH KE CART
   void addToCart(Product product) {
     final index =
-    items.indexWhere((item) => item.product.name == product.name);
+    _items.indexWhere((item) => item.product.name == product.name);
 
-    if (index != -1) {
-      items[index].quantity++;
+    if (index >= 0) {
+      _items[index].quantity++;
     } else {
-      items.add(CartItem(product: product));
+      _items.add(CartItem(product: product));
     }
 
     notifyListeners();
   }
 
-  // 🔼 Tambah qty
+  // 🔥 TAMBAH QTY
   void increaseQty(CartItem item) {
     item.quantity++;
     notifyListeners();
   }
 
-  // 🔽 Kurangi qty
+  // 🔥 KURANG QTY (AUTO HAPUS)
   void decreaseQty(CartItem item) {
     if (item.quantity > 1) {
       item.quantity--;
     } else {
-      items.remove(item);
+      _items.remove(item); // 🔥 AUTO HAPUS
     }
     notifyListeners();
   }
 
-  // 💰 Total harga
-  int get totalPrice {
-    int total = 0;
-    for (var item in items) {
-      total += item.product.price * item.quantity;
-    }
-    return total;
+  // 🔥 HAPUS ITEM MANUAL
+  void removeItem(CartItem item) {
+    _items.remove(item);
+    notifyListeners();
   }
 
-  // 🔥 FIX UTAMA (INI YANG BIKIN ERROR HILANG)
+  // 🔥 CLEAR CART
   void clearCart() {
-    items = [];
+    _items.clear();
     notifyListeners();
   }
 }

@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../models/cart_model.dart';
+import '../../cart/models/cart_model.dart';
 import 'success_page.dart';
 
 class CartPage extends StatelessWidget {
   const CartPage({super.key});
 
-  // 🔥 CHECKOUT FUNCTION
   Future<void> checkout(BuildContext context) async {
     final cart = Provider.of<CartModel>(context, listen: false);
     final user = FirebaseAuth.instance.currentUser;
@@ -42,10 +41,8 @@ class CartPage extends StatelessWidget {
         'created_at': FieldValue.serverTimestamp(),
       });
 
-      // 🔥 CLEAR CART
       cart.clearCart();
 
-      // 🔥 LANGSUNG KE SUCCESS PAGE (TANPA POPUP)
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -102,7 +99,7 @@ class CartPage extends StatelessWidget {
               // 💰 HARGA
               subtitle: Text("Rp ${item.product.price}"),
 
-              // 🔢 QTY
+              // 🔢 QTY + DELETE
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -112,11 +109,21 @@ class CartPage extends StatelessWidget {
                       cart.decreaseQty(item);
                     },
                   ),
+
                   Text(item.quantity.toString()),
+
                   IconButton(
                     icon: const Icon(Icons.add),
                     onPressed: () {
                       cart.increaseQty(item);
+                    },
+                  ),
+
+                  // 🔥 DELETE BUTTON
+                  IconButton(
+                    icon: const Icon(Icons.delete, color: Colors.red),
+                    onPressed: () {
+                      cart.removeItem(item);
                     },
                   ),
                 ],
@@ -126,7 +133,6 @@ class CartPage extends StatelessWidget {
         },
       ),
 
-      // 💰 TOTAL + CHECKOUT
       bottomNavigationBar: Container(
         padding: const EdgeInsets.all(15),
         decoration: const BoxDecoration(
