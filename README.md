@@ -35,5 +35,3 @@ NIM : 1123150053
 - Halaman Checkout
 
 ---
-
-## 📂 Struktur Project
