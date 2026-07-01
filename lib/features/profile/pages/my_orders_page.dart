@@ -164,8 +164,17 @@ class MyOrdersPage extends StatelessWidget {
                                 final orderId = docs[index].id;
                                 final paymentMethod = data['payment_method'] ?? 'Dompet Ku';
                                 if (paymentMethod == 'Dompet Ku') {
-                                  final deepLink = Uri.parse(
-                                    "dompetkampus://pay?merchant_id=permata_store&merchant_name=Permata%20Store&amount=$total&description=Pembayaran%20Order%20$orderId&reference=$orderId&callback=permatastore://payment-callback"
+                                   final deepLink = Uri(
+                                    scheme: 'dompetkampus',
+                                    host: 'pay',
+                                    queryParameters: {
+                                      'merchant_id': 'permata_store',
+                                      'merchant_name': 'Permata Store',
+                                      'amount': total.toString(),
+                                      'description': 'Pembayaran Order $orderId',
+                                      'reference': orderId,
+                                      'callback': 'permatastore://payment-callback',
+                                    },
                                   );
                                   if (await canLaunchUrl(deepLink)) {
                                     await launchUrl(deepLink, mode: LaunchMode.externalApplication);
