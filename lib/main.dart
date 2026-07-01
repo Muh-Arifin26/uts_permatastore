@@ -15,6 +15,12 @@ import 'features/auth/pages/login_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+// 🔥 DEEPLINK
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:app_links/app_links.dart';
+import 'features/cart/pages/success_page.dart';
+import 'dart:async';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -33,9 +39,71 @@ class MyAppWrapper extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => FavoriteModel()),
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
       ],
-      child: const MyApp(),
+      child: const DeepLinkListener(child: MyApp()),
     );
   }
+}
+
+class DeepLinkListener extends StatefulWidget {
+  final Widget child;
+  const DeepLinkListener({super.key, required this.child});
+
+  @override
+  State<DeepLinkListener> createState() => _DeepLinkListenerState();
+}
+
+class _DeepLinkListenerState extends State<DeepLinkListener> {
+  late final AppLinks _appLinks;
+  StreamSubscription<Uri>? _sub;
+
+  @override
+  void initState() {
+    super.initState();
+    _appLinks = AppLinks();
+    _initDeepLinks();
+  }
+
+  @override
+  void dispose() {
+    _sub?.cancel();
+    super.dispose();
+  }
+
+  void _initDeepLinks() {
+    _sub = _appLinks.uriLinkStream.listen((uri) {
+      _handleDeepLink(uri);
+    });
+  }
+
+  void _handleDeepLink(Uri uri) async {
+    if (uri.scheme == 'permatastore' && uri.host == 'payment-callback') {
+      final status = uri.queryParameters['status'];
+      final reference = uri.queryParameters['reference'];
+
+      if (status == 'success' && reference != null) {
+        try {
+          await FirebaseFirestore.instance
+              .collection('orders')
+              .doc(reference)
+              .update({'status': 'Berhasil'});
+
+          if (mounted) {
+            Provider.of<CartModel>(context, listen: false).clearCart();
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (_) => const SuccessPage()),
+              (route) => route.isFirst,
+            );
+          }
+        } catch (e) {
+          debugPrint("Gagal mengupdate order dari callback: $e");
+        }
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) => widget.child;
 }
 
 class MyApp extends StatelessWidget {

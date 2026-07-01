@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'success_page.dart';
+import '../../profile/pages/my_orders_page.dart';
 
 class WaitingPaymentPage extends StatefulWidget {
   final String orderId;
@@ -26,28 +27,41 @@ class _WaitingPaymentPageState extends State<WaitingPaymentPage> {
   Future<void> _checkPayment() async {
     setState(() => _isChecking = true);
     
-    // Simulasi verifikasi pembayaran
+    // Tunggu sebentar untuk simulasi loading pengecekan
     await Future.delayed(const Duration(seconds: 1));
 
     try {
-      // Update status order di Firestore menjadi "Berhasil"
-      await FirebaseFirestore.instance
+      // Ambil dokumen order terbaru dari Firestore
+      final doc = await FirebaseFirestore.instance
           .collection('orders')
           .doc(widget.orderId)
-          .update({'status': 'Berhasil'});
+          .get();
 
-      widget.onPaymentSuccess();
+      final currentStatus = doc.data()?['status'] ?? 'Menunggu Pembayaran';
 
-      if (mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const SuccessPage()),
-        );
+      if (currentStatus == 'Berhasil') {
+        widget.onPaymentSuccess();
+
+        if (mounted) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => const SuccessPage()),
+          );
+        }
+      } else {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Pembayaran belum masuk. Silakan selesaikan pembayaran di aplikasi Dompet Ku terlebih dahulu."),
+              backgroundColor: Colors.orange,
+            ),
+          );
+        }
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Gagal memproses: $e")),
+          SnackBar(content: Text("Gagal memeriksa status: $e")),
         );
       }
     } finally {
@@ -127,7 +141,7 @@ class _WaitingPaymentPageState extends State<WaitingPaymentPage> {
                 height: 50,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
+                    backgroundColor: Colors.blue,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -136,13 +150,40 @@ class _WaitingPaymentPageState extends State<WaitingPaymentPage> {
                   child: _isChecking
                       ? const CircularProgressIndicator(color: Colors.white)
                       : const Text(
-                          "Saya Sudah Bayar",
+                          "Refresh Status Pembayaran",
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),
                         ),
+                ),
+              ),
+              const SizedBox(height: 12),
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: OutlinedButton(
+                  style: OutlinedButton.styleFrom(
+                    side: const BorderSide(color: Colors.blue),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const MyOrdersPage()),
+                    );
+                  },
+                  child: const Text(
+                    "Lihat History Pembayaran",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue,
+                    ),
+                  ),
                 ),
               ),
             ],

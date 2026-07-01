@@ -60,9 +60,8 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> {
         // Selain COD (Dompet Ku / VA), masuk ke halaman Menunggu Pembayaran
         if (_selectedMethod == 'dompet_ku') {
           final deepLink = Uri.parse(
-            "dompetkampus://pay?merchant_id=permata_store&merchant_name=Permata%20Store&amount=${widget.cart.totalPrice}&description=Pembayaran%20Order%20$orderId&reference=$orderId"
+            "dompetkampus://pay?merchant_id=permata_store&merchant_name=Permata%20Store&amount=${widget.cart.totalPrice}&description=Pembayaran%20Order%20$orderId&reference=$orderId&callback=permatastore://payment-callback"
           );
-          
           if (await canLaunchUrl(deepLink)) {
             await launchUrl(deepLink, mode: LaunchMode.externalApplication);
           } else {
