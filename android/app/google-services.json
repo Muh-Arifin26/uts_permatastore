@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "90667484977",
+    "project_id": "permatastore-b7616",
+    "storage_bucket": "permatastore-b7616.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:90667484977:android:cb98798b7ac2a1966d1210",
+        "android_client_info": {
+          "package_name": "com.store.permata"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "90667484977-s8al3e61oi51la3umq0eko8esh5ip8t1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.store.permata",
+            "certificate_hash": "662c3663588851ddbe4ec4d33ce4bee09e659c6d"
+          }
+        },
+        {
+          "client_id": "90667484977-f1kmko0e3pjgegfghbsnbmqc1u9vqfn6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZD4xwNSMNUCse3TFxBvqYd0qnRmecuqI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "90667484977-f1kmko0e3pjgegfghbsnbmqc1u9vqfn6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
