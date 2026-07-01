@@ -4,6 +4,7 @@ import '../widgets/product_card.dart';
 import '../../cart/pages/cart_page.dart';
 import 'favorite_page.dart';
 import '../../profile/pages/profile_page.dart';
+import '../../profile/pages/my_orders_page.dart'; // ⬅️ Tambah ini
 import 'dart:async';
 
 class HomePage extends StatefulWidget {
@@ -121,6 +122,15 @@ class _HomeContentState extends State<HomeContent> {
       appBar: AppBar(
         title: Text("PERMATA SHOP"),
         actions: [
+          IconButton(
+            icon: Icon(Icons.history),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const MyOrdersPage()),
+              );
+            },
+          ),
           IconButton(
             icon: Icon(Icons.shopping_cart),
             onPressed: () {

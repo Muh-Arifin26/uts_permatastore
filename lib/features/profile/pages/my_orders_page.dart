@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:url_launcher/url_launcher.dart';
+import '../../cart/pages/waiting_payment_page.dart';
 
 class MyOrdersPage extends StatelessWidget {
   const MyOrdersPage({super.key});
@@ -75,10 +77,10 @@ class MyOrdersPage extends StatelessWidget {
                             formattedDate,
                             style: const TextStyle(color: Colors.grey, fontSize: 12),
                           ),
-                          const Text(
-                            "Berhasil",
+                          Text(
+                            data['status'] ?? 'Berhasil',
                             style: TextStyle(
-                              color: Colors.green,
+                              color: (data['status'] ?? 'Berhasil') == 'Berhasil' ? Colors.green : Colors.orange,
                               fontWeight: FontWeight.bold,
                               fontSize: 12,
                             ),
@@ -146,6 +148,48 @@ class MyOrdersPage extends StatelessWidget {
                           ),
                         ],
                       ),
+                      if ((data['status'] ?? 'Berhasil') == 'Menunggu Pembayaran') ...[
+                        const Divider(),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.orange,
+                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                minimumSize: Size.zero,
+                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              ),
+                              onPressed: () async {
+                                final orderId = docs[index].id;
+                                final paymentMethod = data['payment_method'] ?? 'Dompet Ku';
+                                if (paymentMethod == 'Dompet Ku') {
+                                  final deepLink = Uri.parse(
+                                    "dompetkampus://pay?merchant_id=permata_store&merchant_name=Permata%20Store&amount=$total&description=Pembayaran%20Order%20$orderId&reference=$orderId"
+                                  );
+                                  if (await canLaunchUrl(deepLink)) {
+                                    await launchUrl(deepLink, mode: LaunchMode.externalApplication);
+                                  }
+                                }
+                                if (context.mounted) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => WaitingPaymentPage(
+                                        orderId: orderId,
+                                        total: total.toDouble(),
+                                        paymentMethod: paymentMethod,
+                                        onPaymentSuccess: () {},
+                                      ),
+                                    ),
+                                  );
+                                }
+                              },
+                              child: const Text("Bayar Sekarang", style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold)),
+                            ),
+                          ],
+                        ),
+                      ],
                     ],
                   ),
                 ),
