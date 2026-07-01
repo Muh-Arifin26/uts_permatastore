@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../models/cart_model.dart';
 import 'success_page.dart';
+import 'waiting_payment_page.dart';
 
 class PaymentDetailPage extends StatefulWidget {
   final CartModel cart;
@@ -25,6 +26,8 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> {
     setState(() => _isProcessing = true);
 
     try {
+      final status = _selectedMethod == 'cod' ? 'Berhasil' : 'Menunggu Pembayaran';
+
       // 1. Simpan order ke Firestore
       final orderRef = await FirebaseFirestore.instance.collection('orders').add({
         'user_id': user.uid,
@@ -38,35 +41,52 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> {
           };
         }).toList(),
         'payment_method': _selectedMethod == 'dompet_ku' ? 'Dompet Ku' : (_selectedMethod == 'cod' ? 'COD' : 'Transfer Bank'),
+        'status': status,
         'created_at': FieldValue.serverTimestamp(),
       });
 
       final orderId = orderRef.id;
 
-      // 2. Jika pilih Dompet Ku, buka dengan Deep Link ke aplikasi Dompet Ku
-      if (_selectedMethod == 'dompet_ku') {
-        final deepLink = Uri.parse(
-          "dompetkampus://pay?merchant_id=permata_store&merchant_name=Permata%20Store&amount=${widget.cart.totalPrice}&description=Pembayaran%20Order%20$orderId&reference=$orderId"
-        );
-        
-        if (await canLaunchUrl(deepLink)) {
-          await launchUrl(deepLink, mode: LaunchMode.externalApplication);
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Aplikasi Dompet Ku tidak terinstal. Pesanan tetap dibuat dengan status pending.")),
+      if (_selectedMethod == 'cod') {
+        // COD langsung sukses, bersihkan cart & buka SuccessPage
+        widget.cart.clearCart();
+        if (mounted) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => const SuccessPage()),
           );
         }
-      }
+      } else {
+        // Selain COD (Dompet Ku / VA), masuk ke halaman Menunggu Pembayaran
+        if (_selectedMethod == 'dompet_ku') {
+          final deepLink = Uri.parse(
+            "dompetkampus://pay?merchant_id=permata_store&merchant_name=Permata%20Store&amount=${widget.cart.totalPrice}&description=Pembayaran%20Order%20$orderId&reference=$orderId"
+          );
+          
+          if (await canLaunchUrl(deepLink)) {
+            await launchUrl(deepLink, mode: LaunchMode.externalApplication);
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("Aplikasi Dompet Ku tidak terinstal. Silakan selesaikan pembayaran.")),
+            );
+          }
+        }
 
-      // 3. Kosongkan keranjang belanja
-      widget.cart.clearCart();
-
-      // 4. Buka halaman sukses
-      if (mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const SuccessPage()),
-        );
+        if (mounted) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (_) => WaitingPaymentPage(
+                orderId: orderId,
+                total: widget.cart.totalPrice.toDouble(),
+                paymentMethod: _selectedMethod == 'dompet_ku' ? 'Dompet Ku' : 'Transfer Bank',
+                onPaymentSuccess: () {
+                  widget.cart.clearCart();
+                },
+              ),
+            ),
+          );
+        }
       }
     } catch (e) {
       if (mounted) {
