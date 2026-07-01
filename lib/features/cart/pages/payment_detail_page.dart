@@ -58,9 +58,13 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> {
         }
       } else {
         // Selain COD (Dompet Ku / VA), masuk ke halaman Menunggu Pembayaran
+        final total = widget.cart.totalPrice.toDouble();
+        // Bersihkan keranjang belanja karena pesanan sudah masuk antrean pending
+        widget.cart.clearCart();
+
         if (_selectedMethod == 'dompet_ku') {
           final deepLink = Uri.parse(
-            "dompetkampus://pay?merchant_id=permata_store&merchant_name=Permata%20Store&amount=${widget.cart.totalPrice}&description=Pembayaran%20Order%20$orderId&reference=$orderId&callback=permatastore://payment-callback"
+            "dompetkampus://pay?merchant_id=permata_store&merchant_name=Permata%20Store&amount=$total&description=Pembayaran%20Order%20$orderId&reference=$orderId&callback=permatastore://payment-callback"
           );
           if (await canLaunchUrl(deepLink)) {
             await launchUrl(deepLink, mode: LaunchMode.externalApplication);
@@ -77,11 +81,9 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> {
             MaterialPageRoute(
               builder: (_) => WaitingPaymentPage(
                 orderId: orderId,
-                total: widget.cart.totalPrice.toDouble(),
+                total: total,
                 paymentMethod: _selectedMethod == 'dompet_ku' ? 'Dompet Ku' : 'Transfer Bank',
-                onPaymentSuccess: () {
-                  widget.cart.clearCart();
-                },
+                onPaymentSuccess: () {},
               ),
             ),
           );
