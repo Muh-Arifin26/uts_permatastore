@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../cart/models/cart_model.dart';
 import 'success_page.dart';
+import 'payment_detail_page.dart'; // ⬅️ Tambah ini
 
 class CartPage extends StatelessWidget {
   const CartPage({super.key});
@@ -26,35 +27,12 @@ class CartPage extends StatelessWidget {
       return;
     }
 
-    try {
-      await FirebaseFirestore.instance.collection('orders').add({
-        'user_id': user.uid,
-        'total': cart.totalPrice,
-        'items': cart.items.map((item) {
-          return {
-            'name': item.product.name,
-            'price': item.product.price,
-            'qty': item.quantity,
-            'image': item.product.image[0],
-          };
-        }).toList(),
-        'created_at': FieldValue.serverTimestamp(),
-      });
-
-      cart.clearCart();
-
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (_) => const SuccessPage(),
-        ),
-      );
-
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error: $e")),
-      );
-    }
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => PaymentDetailPage(cart: cart),
+      ),
+    );
   }
 
   @override
