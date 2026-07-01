@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import '../../../core/theme/theme_provider.dart';
+import 'my_orders_page.dart';
 
 
 class ProfilePage extends StatelessWidget {
@@ -80,7 +81,12 @@ class ProfilePage extends StatelessWidget {
               leading: Icon(Icons.shopping_bag),
               title: Text("Pesanan Saya"),
               trailing: Icon(Icons.arrow_forward_ios, size: 16),
-              onTap: () {},
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const MyOrdersPage()),
+                );
+              },
             ),
 
             ListTile(
