@@ -18,7 +18,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 // 🔥 DEEPLINK
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:app_links/app_links.dart';
-import 'features/cart/pages/success_page.dart';
+import 'features/cart/pages/receipt_page.dart';
 import 'dart:async';
 
 void main() async {
@@ -91,7 +91,12 @@ class _DeepLinkListenerState extends State<DeepLinkListener> {
             Provider.of<CartModel>(context, listen: false).clearCart();
             Navigator.pushAndRemoveUntil(
               context,
-              MaterialPageRoute(builder: (_) => const SuccessPage()),
+              MaterialPageRoute(
+                builder: (_) => ReceiptPage(
+                  orderId: reference,
+                  showBackToHome: true,
+                ),
+              ),
               (route) => route.isFirst,
             );
           }

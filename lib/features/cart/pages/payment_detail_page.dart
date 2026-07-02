@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../models/cart_model.dart';
-import 'success_page.dart';
+import 'receipt_page.dart';
 import 'waiting_payment_page.dart';
 
 class PaymentDetailPage extends StatefulWidget {
@@ -48,12 +48,17 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> {
       final orderId = orderRef.id;
 
       if (_selectedMethod == 'cod') {
-        // COD langsung sukses, bersihkan cart & buka SuccessPage
+        // COD langsung sukses, bersihkan cart & buka ReceiptPage
         widget.cart.clearCart();
         if (mounted) {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (_) => const SuccessPage()),
+            MaterialPageRoute(
+              builder: (_) => ReceiptPage(
+                orderId: orderId,
+                showBackToHome: true,
+              ),
+            ),
           );
         }
       } else {

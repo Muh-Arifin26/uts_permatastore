@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'success_page.dart';
+import 'receipt_page.dart';
 import '../../profile/pages/my_orders_page.dart';
 
 class WaitingPaymentPage extends StatefulWidget {
@@ -45,7 +45,12 @@ class _WaitingPaymentPageState extends State<WaitingPaymentPage> {
         if (mounted) {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (_) => const SuccessPage()),
+            MaterialPageRoute(
+              builder: (_) => ReceiptPage(
+                orderId: widget.orderId,
+                showBackToHome: true,
+              ),
+            ),
           );
         }
       } else {

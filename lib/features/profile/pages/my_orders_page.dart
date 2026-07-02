@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../cart/pages/receipt_page.dart';
 import '../../cart/pages/waiting_payment_page.dart';
 
 class MyOrdersPage extends StatelessWidget {
@@ -195,6 +196,39 @@ class MyOrdersPage extends StatelessWidget {
                                 }
                               },
                               child: const Text("Bayar Sekarang", style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold)),
+                            ),
+                          ],
+                        ),
+                      ],
+                      if ((data['status'] ?? 'Berhasil') == 'Berhasil') ...[
+                        const Divider(),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            ElevatedButton.icon(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFF1565C0),
+                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                minimumSize: Size.zero,
+                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                              onPressed: () {
+                                final orderId = docs[index].id;
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => ReceiptPage(
+                                      orderId: orderId,
+                                      showBackToHome: false,
+                                    ),
+                                  ),
+                                );
+                              },
+                              icon: const Icon(Icons.receipt_long, color: Colors.white, size: 16),
+                              label: const Text("Lihat Struk", style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold)),
                             ),
                           ],
                         ),
