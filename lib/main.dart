@@ -21,6 +21,9 @@ import 'package:app_links/app_links.dart';
 import 'features/cart/pages/receipt_page.dart';
 import 'dart:async';
 
+// 🔑 Global navigator key agar deep link bisa navigasi dari mana saja
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -87,10 +90,15 @@ class _DeepLinkListenerState extends State<DeepLinkListener> {
               .doc(reference)
               .update({'status': 'Berhasil'});
 
+          // Bersihkan cart
           if (mounted) {
             Provider.of<CartModel>(context, listen: false).clearCart();
-            Navigator.pushAndRemoveUntil(
-              context,
+          }
+
+          // 🔥 Gunakan navigatorKey agar navigasi bekerja di dalam MaterialApp
+          final nav = navigatorKey.currentState;
+          if (nav != null) {
+            nav.pushAndRemoveUntil(
               MaterialPageRoute(
                 builder: (_) => ReceiptPage(
                   orderId: reference,
@@ -120,6 +128,9 @@ class MyApp extends StatelessWidget {
       builder: (context, themeProvider, child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
+
+          // 🔑 Pasang navigatorKey agar deep link bisa navigasi
+          navigatorKey: navigatorKey,
 
           themeMode: themeProvider.themeMode,
           theme: ThemeData.light(),
